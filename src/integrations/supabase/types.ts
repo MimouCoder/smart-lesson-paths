@@ -14,7 +14,191 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      lessons: {
+        Row: {
+          content: string
+          created_at: string
+          file_name: string
+          final_score: number | null
+          id: string
+          status: string
+          storage_path: string
+          title: string
+          user_id: string
+        }
+        Insert: {
+          content?: string
+          created_at?: string
+          file_name: string
+          final_score?: number | null
+          id?: string
+          status?: string
+          storage_path: string
+          title: string
+          user_id: string
+        }
+        Update: {
+          content?: string
+          created_at?: string
+          file_name?: string
+          final_score?: number | null
+          id?: string
+          status?: string
+          storage_path?: string
+          title?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      objectives: {
+        Row: {
+          body: string
+          completed: boolean
+          created_at: string
+          id: string
+          lesson_id: string
+          position: number
+          sprint_id: string
+          title: string
+          user_id: string
+        }
+        Insert: {
+          body?: string
+          completed?: boolean
+          created_at?: string
+          id?: string
+          lesson_id: string
+          position: number
+          sprint_id: string
+          title: string
+          user_id: string
+        }
+        Update: {
+          body?: string
+          completed?: boolean
+          created_at?: string
+          id?: string
+          lesson_id?: string
+          position?: number
+          sprint_id?: string
+          title?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "objectives_lesson_id_fkey"
+            columns: ["lesson_id"]
+            isOneToOne: false
+            referencedRelation: "lessons"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "objectives_sprint_id_fkey"
+            columns: ["sprint_id"]
+            isOneToOne: false
+            referencedRelation: "sprints"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      questions: {
+        Row: {
+          answered_correctly: boolean
+          correct_index: number
+          created_at: string
+          explanation: string
+          id: string
+          is_final: boolean
+          lesson_id: string
+          objective_id: string | null
+          options: Json
+          position: number
+          prompt: string
+          user_id: string
+        }
+        Insert: {
+          answered_correctly?: boolean
+          correct_index: number
+          created_at?: string
+          explanation?: string
+          id?: string
+          is_final?: boolean
+          lesson_id: string
+          objective_id?: string | null
+          options: Json
+          position: number
+          prompt: string
+          user_id: string
+        }
+        Update: {
+          answered_correctly?: boolean
+          correct_index?: number
+          created_at?: string
+          explanation?: string
+          id?: string
+          is_final?: boolean
+          lesson_id?: string
+          objective_id?: string | null
+          options?: Json
+          position?: number
+          prompt?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "questions_lesson_id_fkey"
+            columns: ["lesson_id"]
+            isOneToOne: false
+            referencedRelation: "lessons"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "questions_objective_id_fkey"
+            columns: ["objective_id"]
+            isOneToOne: false
+            referencedRelation: "objectives"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      sprints: {
+        Row: {
+          created_at: string
+          id: string
+          lesson_id: string
+          position: number
+          summary: string
+          title: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          lesson_id: string
+          position: number
+          summary?: string
+          title: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          lesson_id?: string
+          position?: number
+          summary?: string
+          title?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "sprints_lesson_id_fkey"
+            columns: ["lesson_id"]
+            isOneToOne: false
+            referencedRelation: "lessons"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
