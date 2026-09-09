@@ -114,6 +114,36 @@ function StudyRoom() {
     }
   }
 
+  function downloadText() {
+    const text = renderJourneyText({
+      lessonTitle: data?.lesson?.title ?? "Lesson",
+      objectivesDone: doneCount,
+      objectivesTotal: objectives.length,
+      finalScore: data?.lesson?.final_score ?? null,
+      sprints: sprints.map((s) => ({
+        title: s.title,
+        summary: s.summary,
+        objectives: objectives
+          .filter((o) => o.sprint_id === s.id)
+          .map((o) => ({
+            title: o.title,
+            body: o.body,
+            completed: o.completed,
+            questions: questions.filter((q) => q.objective_id === o.id),
+          })),
+      })),
+      finalQuestions: finalQuestions,
+    });
+    const blob = new Blob([text], { type: "text/plain;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `${(data?.lesson?.title ?? "study-journey").replace(/[^\w\u0600-\u06FF -]+/g, "")}.txt`;
+    a.click();
+    URL.revokeObjectURL(url);
+    toast.success("Saved as a text file.");
+  }
+
   if (isLoading) {
     return <main className="mx-auto max-w-[1400px] px-6 py-8 text-sm text-frost/60">Loading…</main>;
   }
