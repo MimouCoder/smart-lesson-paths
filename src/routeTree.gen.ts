@@ -14,6 +14,7 @@ import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AuthenticatedLibraryRouteImport } from './routes/_authenticated/library'
 import { Route as AuthenticatedStudyLessonIdRouteImport } from './routes/_authenticated/study.$lessonId'
+import { Route as ApiPublicJourneyRouteImport } from './routes/api/public/journey'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -40,18 +41,25 @@ const AuthenticatedStudyLessonIdRoute =
     path: '/study/$lessonId',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const ApiPublicJourneyRoute = ApiPublicJourneyRouteImport.update({
+  id: '/api/public/journey',
+  path: '/api/public/journey',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/library': typeof AuthenticatedLibraryRoute
   '/study/$lessonId': typeof AuthenticatedStudyLessonIdRoute
+  '/api/public/journey': typeof ApiPublicJourneyRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/library': typeof AuthenticatedLibraryRoute
   '/study/$lessonId': typeof AuthenticatedStudyLessonIdRoute
+  '/api/public/journey': typeof ApiPublicJourneyRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -60,12 +68,14 @@ export interface FileRoutesById {
   '/auth': typeof AuthRoute
   '/_authenticated/library': typeof AuthenticatedLibraryRoute
   '/_authenticated/study/$lessonId': typeof AuthenticatedStudyLessonIdRoute
+  '/api/public/journey': typeof ApiPublicJourneyRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/auth' | '/library' | '/study/$lessonId'
+  fullPaths:
+    '/' | '/auth' | '/library' | '/study/$lessonId' | '/api/public/journey'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/auth' | '/library' | '/study/$lessonId'
+  to: '/' | '/auth' | '/library' | '/study/$lessonId' | '/api/public/journey'
   id:
     | '__root__'
     | '/'
@@ -73,12 +83,14 @@ export interface FileRouteTypes {
     | '/auth'
     | '/_authenticated/library'
     | '/_authenticated/study/$lessonId'
+    | '/api/public/journey'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   AuthRoute: typeof AuthRoute
+  ApiPublicJourneyRoute: typeof ApiPublicJourneyRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -118,6 +130,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedStudyLessonIdRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/api/public/journey': {
+      id: '/api/public/journey'
+      path: '/api/public/journey'
+      fullPath: '/api/public/journey'
+      preLoaderRoute: typeof ApiPublicJourneyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -138,6 +157,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   AuthRoute: AuthRoute,
+  ApiPublicJourneyRoute: ApiPublicJourneyRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

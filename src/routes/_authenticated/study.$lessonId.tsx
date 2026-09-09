@@ -5,6 +5,7 @@ import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { AppHeader } from "@/components/AppHeader";
 import { buildFinalExam } from "@/lib/journey.functions";
+import { renderJourneyText } from "@/lib/journey-text";
 
 export const Route = createFileRoute("/_authenticated/study/$lessonId")({
   head: () => ({
