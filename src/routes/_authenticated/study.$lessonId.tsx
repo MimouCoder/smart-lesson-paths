@@ -152,9 +152,17 @@ function StudyRoom() {
     <main className="mx-auto max-w-[1400px] px-6 py-8">
       <AppHeader
         right={
-          <Link to="/library" className="text-xs font-medium text-frost/60 hover:text-frost">
-            My lessons
-          </Link>
+          <div className="flex items-center gap-3">
+            <button
+              onClick={downloadText}
+              className="edge rounded-lg bg-white/70 px-3 py-1.5 text-xs font-medium text-frost transition hover:bg-white"
+            >
+              Save as text file
+            </button>
+            <Link to="/library" className="text-xs font-medium text-frost/60 hover:text-frost">
+              My lessons
+            </Link>
+          </div>
         }
       />
 
