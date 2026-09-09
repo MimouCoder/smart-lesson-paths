@@ -5,6 +5,7 @@ import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { AppHeader } from "@/components/AppHeader";
 import { buildFinalExam } from "@/lib/journey.functions";
+import { renderJourneyText } from "@/lib/journey-text";
 
 export const Route = createFileRoute("/_authenticated/study/$lessonId")({
   head: () => ({
@@ -113,6 +114,36 @@ function StudyRoom() {
     }
   }
 
+  function downloadText() {
+    const text = renderJourneyText({
+      lessonTitle: data?.lesson?.title ?? "Lesson",
+      objectivesDone: doneCount,
+      objectivesTotal: objectives.length,
+      finalScore: data?.lesson?.final_score ?? null,
+      sprints: sprints.map((s) => ({
+        title: s.title,
+        summary: s.summary,
+        objectives: objectives
+          .filter((o) => o.sprint_id === s.id)
+          .map((o) => ({
+            title: o.title,
+            body: o.body,
+            completed: o.completed,
+            questions: questions.filter((q) => q.objective_id === o.id),
+          })),
+      })),
+      finalQuestions: finalQuestions,
+    });
+    const blob = new Blob([text], { type: "text/plain;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `${(data?.lesson?.title ?? "study-journey").replace(/[^\w\u0600-\u06FF -]+/g, "")}.txt`;
+    a.click();
+    URL.revokeObjectURL(url);
+    toast.success("Saved as a text file.");
+  }
+
   if (isLoading) {
     return <main className="mx-auto max-w-[1400px] px-6 py-8 text-sm text-frost/60">Loading…</main>;
   }
@@ -121,9 +152,17 @@ function StudyRoom() {
     <main className="mx-auto max-w-[1400px] px-6 py-8">
       <AppHeader
         right={
-          <Link to="/library" className="text-xs font-medium text-frost/60 hover:text-frost">
-            My lessons
-          </Link>
+          <div className="flex items-center gap-3">
+            <button
+              onClick={downloadText}
+              className="edge rounded-lg bg-white/70 px-3 py-1.5 text-xs font-medium text-frost transition hover:bg-white"
+            >
+              Save as text file
+            </button>
+            <Link to="/library" className="text-xs font-medium text-frost/60 hover:text-frost">
+              My lessons
+            </Link>
+          </div>
         }
       />
 
